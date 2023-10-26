@@ -1,0 +1,4 @@
+*videoSimilarityEnv*
+data/
+*.mp4
+*pycache*

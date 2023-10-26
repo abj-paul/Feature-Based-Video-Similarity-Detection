@@ -1,0 +1,5 @@
+Note that, we have put data in gitignore so before you push, always ensure to zip data folder using
+
+#+begin_src bash
+zip bsl_data_collected.zip data/ -r
+#+end_src

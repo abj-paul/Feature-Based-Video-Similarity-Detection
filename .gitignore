@@ -2,3 +2,4 @@
 data/
 *.mp4
 *pycache*
+*.h5

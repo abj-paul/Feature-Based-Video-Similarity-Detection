@@ -1,0 +1,2 @@
+* Sign Recognition Endpoint
+* Video Similarity Endpoint

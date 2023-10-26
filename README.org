@@ -1,6 +1,0 @@
-Note that, we have put data in gitignore so before you push, always ensure to zip data folder using
-Additionally, generate requirements.txt file.
-#+begin_src bash
-pip freeze > requirements.txt
-zip bsl_data_collected.zip data/ -r
-#+end_src

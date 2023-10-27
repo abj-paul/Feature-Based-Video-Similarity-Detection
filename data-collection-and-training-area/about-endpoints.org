@@ -1,0 +1,41 @@
+* Installation
+#+begin_src bash
+python3 -m venv apiBSLEnv
+source apiBSLEnv/bin/activate
+pip install -r requirements.txt
+#+end_src
+
+Now to run it, simply do:
+#+begin_src bash
+uvicorn main:app --reload
+#+end_src
+
+* Endpoint Description
+** Sign Recognition Endpoint
+This endpoint takes the url of the image as input. The url can be a local file, an online file or even a minio url.
+#+begin_src json
+{
+	"sign_image_uri": "/home/abhijit/Downloads/KU-BdSL Khulna University Bengali Sign Language dataset/KU-BdSL/MSLD/2433/001af11864df4bf214f0a66aa2c11f91.jpg",
+	"selected_model_name": "uwu"
+}
+#+end_src
+
+It returns the sign recognized, the probablity of it being that sign and an annotated image.
+#+begin_src text
+"Jha, 0.44424018263816833, /home/abhijit/Feature-Based-Video-Similarity-Detection/api/Jha.png"
+#+end_src
+*** Issues
+Note that, this module takes 2-3s to run so it does not yet provide live recognition, because a 2-3s is not a live recognition. We are thinking on how to fix this. Additionally, the current accuracy is terrible since the data itself was bad. We can fix it soon. It will not change the api though so you can safely use it.
+
+** Video Similarity
+This endpoint takes the url of the video files as input. The url can be a local file, an online file or even a minio url.
+#+begin_src json
+{
+  "tutorial_uri": "/home/abhijit/Feature-Based-Video-Similarity-Detection/data-collection-and-training-area/demo.mkv",
+  "performance_video_uri": "/home/abhijit/Feature-Based-Video-Similarity-Detection/data-collection-and-training-area/demo.mkv",
+	"selected_model_name": "uwu"
+}
+#+end_src
+
+It returns the percentage of similarity between the videos. Note that, opencv reads video frame by frame, meaning if the videos are 1min and 2min respectively, it would take 3min for opencv to read the videos and 3min 5s to give a result. Most REST apis close their connection before that.
+So maybe we can write down the results in a file. The frontend can fetch 4-5 min later.

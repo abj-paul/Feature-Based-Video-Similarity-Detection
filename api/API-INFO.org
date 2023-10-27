@@ -1,2 +1,14 @@
 * Sign Recognition Endpoint
+#+begin_src json
+{
+	"sign_image_uri": "/home/abhijit/Downloads/KU-BdSL Khulna University Bengali Sign Language dataset/KU-BdSL/MSLD/2433/001af11864df4bf214f0a66aa2c11f91.jpg",
+	"selected_model_name": "uwu"
+}
+#+end_src
+
+It returns: 
+#+begin_src json 
+"Jha, 0.44424018263816833, /home/abhijit/Feature-Based-Video-Similarity-Detection/api/Jha.png"
+#+end_src 
+
 * Video Similarity Endpoint

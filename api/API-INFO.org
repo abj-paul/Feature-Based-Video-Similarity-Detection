@@ -1,4 +1,5 @@
 * Sign Recognition Endpoint
+It takes the url of the image as input. The url can be a local file, an online file or even a minio image url.
 #+begin_src json
 {
 	"sign_image_uri": "/home/abhijit/Downloads/KU-BdSL Khulna University Bengali Sign Language dataset/KU-BdSL/MSLD/2433/001af11864df4bf214f0a66aa2c11f91.jpg",
@@ -6,9 +7,13 @@
 }
 #+end_src
 
-It returns: 
+It returns the sign detected, the probablity of the sign being the sign it has detected and an annotated image of the sign and keypoints.
 #+begin_src json 
 "Jha, 0.44424018263816833, /home/abhijit/Feature-Based-Video-Similarity-Detection/api/Jha.png"
 #+end_src 
+
+Note that, it has terrible performeance because the data is bad. We can fix it by making new data, easily. And it would not change the REST api in any manner so feel free to use this endpoint in your code. We will update our underlying model soon.
+
+Additionally, frontend-backend interaction requires 2-3s to happen so the sign recognition no longer remains live. We need to think about it and find a way around it.
 
 * Video Similarity Endpoint

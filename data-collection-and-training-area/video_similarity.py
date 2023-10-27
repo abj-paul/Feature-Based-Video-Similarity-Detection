@@ -27,12 +27,12 @@ def cosine_similairty(a,b):
 
 
 def calculate_video_similarity(video1_address, video2_address):
-    #FRAME_NUM1 = collectActivityDataFromVideo(video1_address,"video1", 1, 300000)
-    #FRAME_NUM2 = collectActivityDataFromVideo(video2_address,"video2", 1, 300000)
-    #print(f"DEBUG: {FRAME_NUM1}, {FRAME_NUM2}")
+    FRAME_NUM1 = collectActivityDataFromVideo(video1_address,"video1", 1, 300000)
+    FRAME_NUM2 = collectActivityDataFromVideo(video2_address,"video2", 1, 300000)
+    print(f"DEBUG: {FRAME_NUM1}, {FRAME_NUM2}")
 
-    FRAME_NUM1 = 635
-    FRAME_NUM2 = 635
+    #FRAME_NUM1 = 635
+    #FRAME_NUM2 = 635
 
     X,Y = load_activity_data(["video1", "video2"], min(FRAME_NUM1, FRAME_NUM2))
     print(f"DEBUG: {X.shape}, {X[0][0].shape}, {X[1][0].shape}")

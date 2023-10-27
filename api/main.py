@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from trained_model.sign_recognition import predict_sign
+from trained_model.video_similarity import calculate_video_similarity
 
 class VideoSimilarityRequest(BaseModel):
     tutorial_uri: str
@@ -18,10 +20,10 @@ async def root_requests():
 
 @app.post("/api/v1/video/similarity", response_model=float)
 async def video_similarity(videos : VideoSimilarityRequest):
-    return 0.993
+    return calculate_video_similarity(videos.tutorial_uri, videos.performance_video_uri)
 
 @app.post("/api/v1/image/recognize/sign", response_model=str)
 async def video_similarity(request: SignRecognitionRequest):
-    return "Ka"
+    return predict_sign(request.sign_image_uri)
 
 

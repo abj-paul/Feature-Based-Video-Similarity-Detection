@@ -36,7 +36,8 @@ It takes the url of the videos as input. The url can be a local file, an online 
   "performance_video_uri": "/home/abhijit/Feature-Based-Video-Similarity-Detection/data-collection-and-training-area/demo.mkv",
 	"selected_model_name": "uwu"
 }
+#+end_src 
+
 It returns a single floating point value - the similarity percentage between the videos.
 
 Note that, opencv reads videos frame by frame. Meaning if a video is 1min and another video is 2min, opencv would take 3min to read the videos and 3min 2s to generate similarity score! So your request has to wait for 3 freaking minutes. For this reason, we think that we will write down the result in some file first. Frontend will fetch it from there after some time.
-#+end_src 

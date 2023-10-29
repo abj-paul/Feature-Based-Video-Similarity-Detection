@@ -69,8 +69,10 @@ def collectActivityDataFromCamera(className, numOfSamples, framesPerSample):
         if not os.path.exists(f"data/{className}"):
             os.mkdir(f"data/{className}")
         for sample_number in range(numOfSamples):
+            noisyVideoName = f"data/noisy_{className}_{sample_number}.mp4"
             videoName = f"data/{className}_{sample_number}.mp4"
             out = cv2.VideoWriter(videoName, cv2.VideoWriter_fourcc('m', 'p', '4', 'v') , 20.0, (640,480))
+            outNoisy = cv2.VideoWriter(noisyVideoName, cv2.VideoWriter_fourcc('m', 'p', '4', 'v') , 20.0, (640,480))
 
             frame_number = 0
             saved_frame_number = 0
@@ -94,6 +96,10 @@ def collectActivityDataFromCamera(className, numOfSamples, framesPerSample):
                     np.save(f"data/{className}/sample{sample_number}/frame_{int(math.floor(saved_frame_number/EVERY_N_FRAME))}.npy", keypoints)
 
                     cv2.imshow("Live Video", keypointImage)
+                    out.write(cv2.resize(frame, (640, 480)))
+                    outNoisy.write(cv2.resize(frame, (640, 480)))
+                else: 
+                    outNoisy.write(cv2.resize(frame, (640, 480)))
                 
                 if cv2.waitKey(1) == ord('q'): 
                     videoCaptureObject.release()
@@ -105,8 +111,8 @@ def collectActivityDataFromCamera(className, numOfSamples, framesPerSample):
                 saved_frame_number+=1
                 
                 
-                out.write(cv2.resize(frame, (640, 480)))
 
             out.release()
+            outNoisy.release()
 
 

@@ -1,0 +1,3 @@
+- [ ] Collect data for three words
+- [ ] Train keywords
+- [ ] Train hand image

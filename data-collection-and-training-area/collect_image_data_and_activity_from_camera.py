@@ -58,7 +58,7 @@ def get_keypoints(image, model):
 
 
 def collectDataForClass(className, number_of_sample):
-    framesPerSecond=1
+    framesPerSecond=0.5
     if not os.path.exists('data'):
         os.mkdir('data')
     if not os.path.exists(f'data/{className}'):
@@ -67,6 +67,7 @@ def collectDataForClass(className, number_of_sample):
     videoCaptureObject = cv2.VideoCapture(VIDEO_STREAM_LINK)
     frame_number = 0
     out = cv2.VideoWriter(f"data/{className}.mp4", cv2.VideoWriter_fourcc('m', 'p', '4', 'v') , 20.0, (640,480))
+    out_keypoint_image = cv2.VideoWriter(f"data/{className}_keypoint.mp4", cv2.VideoWriter_fourcc('m', 'p', '4', 'v') , 20.0, (640,480))
 
     starting_frame = 200
     saved_frame_number = 0
@@ -85,6 +86,7 @@ def collectDataForClass(className, number_of_sample):
                     keypointImage, keypoints = get_keypoints(frame, holistic)
                     np.save(f"data/{className}/frame_{saved_frame_number}.npy", keypoints)
                     out.write(cv2.resize(frame, (640, 480)))
+                    out_keypoint_image.write(cv2.resize(keypointImage, (640, 480)))
                     saved_frame_number+=1
                     cv2.putText(keypointImage, f"COLLECTING IMAGE SAMPLE {saved_frame_number} FOR {className}", (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,255), 2)
                     cv2.imshow("Sample", keypointImage)
@@ -94,4 +96,4 @@ def collectDataForClass(className, number_of_sample):
             if saved_frame_number > number_of_sample: 
                 break
 
-collectDataForClass("Abhijit", 10)
+collectDataForClass("miser", 30)

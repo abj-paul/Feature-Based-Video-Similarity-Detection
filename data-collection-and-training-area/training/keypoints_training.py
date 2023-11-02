@@ -49,6 +49,7 @@ model.fit(x_train, y_train, epochs=10, batch_size=32)  # Adjust the number of ep
 # Evaluate the model on the test data
 test_loss, test_accuracy = model.evaluate(x_test, y_test)
 print(f'Test accuracy: {test_accuracy}')
+model.save("keypoints_based_sign_recognition_model.h5")  # Save it as an HDF5 file (recommended)
 
 # Make predictions on new keypoints data
 new_keypoints_data = keypoints_data[0]  # Replace with your new data

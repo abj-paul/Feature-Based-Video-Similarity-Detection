@@ -79,7 +79,7 @@ def save_keypoints_and_image(image_path, class_name, sample_number):
         image = cv2.imread(image_path)
         keypointImage, keypoints = get_keypoints(image, holistic)
         np.save(f"data/{class_name}/sample_{sample_number}.npy", keypoints)
-        cv2.imwrite(f"data/{class_name}/keypoint_sample_{sample_number}.jpg",cv2.resize(image, (640, 480)))
+        cv2.imwrite(f"data/{class_name}/keypoint_sample_{sample_number}.jpg",cv2.resize(keypointImage, (640, 480)))
 
 
 directory_image_paths = get_image_paths_from_KU_dataset("MSLD/")

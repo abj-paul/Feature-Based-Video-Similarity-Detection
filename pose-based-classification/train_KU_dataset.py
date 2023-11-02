@@ -3,7 +3,6 @@ import tensorflow as tf
 import cv2
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
-from collect_pose_data import get_image_paths_from_KU_dataset
 from tensorflow.keras.utils import to_categorical
 
 # Assuming you have loaded images and keypoints
@@ -20,25 +19,15 @@ def load_KU_dataset(SAMPLE_NUM):
     class_labels = []
     for class_index, class_name in enumerate(classes):
         for sample_number in range(1, SAMPLE_NUM):
+            image = cv2.imread(f'data/{class_name}/keypoint_sample_{sample_number}.jpg')
+            image = cv2.resize(image, (128, 128))
+            images.append(image)
             keypoint = np.load(f'data/{class_name}/sample_{sample_number}.npy')
             keypoints.append(keypoint)
             class_labels.append(class_index)
-
-
-    directory_image_paths = get_image_paths_from_KU_dataset("MSLD/")
-    for directory_name, folder_images in directory_image_paths:
-        count = 0
-        for index,image_path in enumerate(folder_images):
-            image = cv2.imread(image_path)
-            image = cv2.resize(image, (128, 128))
-            images.append(image)
-            count += 1
-            if count >= SAMPLE_NUM-1:
-                break
-
     return images, np.array(keypoints), np.array(class_labels)
 
-images, keypoints, labels = load_KU_dataset(10)
+images, keypoints, labels = load_KU_dataset(40)
 print(np.array(images).shape, keypoints.shape, np.array(labels).shape)
 
 # Define the number of classes (replace with your actual number)
@@ -51,47 +40,34 @@ resized_images = np.array([cv2.resize(image, (128, 128)) for image in images])
 images_flattened = resized_images.reshape(resized_images.shape[0], -1)  # Reshape to (1500, 128*128*3)
 keypoints_flattened = keypoints.reshape(keypoints.shape[0], -1)  # Reshape to (1500, 1662)
 
+num_classes = len(labels)
+
+images = np.array(images, dtype='float32') / 255.0
 # Split the data into training and testing sets
-x_train_img, x_test_img, x_train_keypoints, x_test_keypoints, y_train, y_test = train_test_split(
-    images_flattened, keypoints_flattened, labels, test_size=0.2, random_state=42
-)
+x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
 
+# Normalize pixel values to be between 0 and 1
 
-y_train = to_categorical(y_train, num_classes)
-y_test = to_categorical(y_test, num_classes)
-
-# Define the image processing part of the model
-image_model = keras.Sequential([
-    keras.layers.Input(shape=(images_flattened.shape[1],)),  # Adjust input shape based on the flattened image size
-    keras.layers.Dense(128, activation='relu'),
-    keras.layers.Dense(64, activation='relu')
-])
-
-# Define the keypoints processing part of the model
-keypoints_model = keras.Sequential([
-    keras.layers.Input(shape=(keypoints_flattened.shape[1],)),  # Adjust input shape based on the flattened keypoints size
+# Create a CNN model
+model = keras.Sequential([
+    keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(128, 128, 3)),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    keras.layers.Flatten(),
     keras.layers.Dense(64, activation='relu'),
-    keras.layers.Dense(32, activation='relu')
+    keras.layers.Dense(num_classes, activation='softmax')
 ])
-
-# Concatenate the outputs of both models
-combined_model = keras.layers.concatenate([image_model.output, keypoints_model.output])
-
-# Add additional layers for classification
-x = keras.layers.Dense(64, activation='relu')(combined_model)
-x = keras.layers.Dense(32, activation='relu')(x)
-output = keras.layers.Dense(num_classes, activation='softmax')(x)
-
-# Create the final model
-model = keras.models.Model(inputs=[image_model.input, keypoints_model.input], outputs=output)
 
 # Compile the model
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',  # Adjust the loss function as needed
+              metrics=['accuracy'])
 
 # Train the model
-model.fit([x_train_img, x_train_keypoints], y_train, epochs=10, batch_size=32)
+model.fit(x_train, y_train, epochs=10, batch_size=32)  # Adjust the number of epochs and batch size as needed
 
-# Evaluate the model
-test_loss, test_accuracy = model.evaluate([x_test_img, x_test_keypoints], y_test)
+# Evaluate the model on the test data
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
 print(f'Test accuracy: {test_accuracy}')
-

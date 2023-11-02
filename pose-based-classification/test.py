@@ -1,4 +1,5 @@
 import os
+import cv2
 
 # Define the root directory where your images are stored
 root_directory = 'MSLD/'  # Replace with the actual path
@@ -14,8 +15,13 @@ for dirpath, dirnames, filenames in os.walk(root_directory):
         directory_image_paths.append((directory_name, image_paths))
 
 # Print the list of directory names and image paths
+count = 0
 for directory_name, folder_images in directory_image_paths:
     print(f"Images in Directory '{directory_name}':")
     for image_path in folder_images:
         print(image_path)
+        img = cv2.imread(image_path)
+        print(img.shape)
+        count+=1
+print(count)
 

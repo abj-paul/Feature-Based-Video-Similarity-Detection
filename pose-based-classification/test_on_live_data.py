@@ -4,6 +4,10 @@ import cv2
 import numpy as np
 import os
 import sys
+from cvzone.HandTrackingModule import HandDetector
+import numpy as np
+import math
+
 
 # Importing module from the previous directory
 
@@ -40,41 +44,57 @@ tags = labels_list = [
     'Talobbo sha/Danta sa/Murdha Sha',
     'Ha'
 ]
+framesPerSecond = 1
+VIDEO_STREAM_LINK = "http:192.168.0.100:4747/video"
+def collectHandKeypointsDataForClass():
+    handDetector = HandDetector()
+    IMG_SIZE = 300
+    CROP_OFFSET = 30
 
-frame_number = 0
-predicted_class_index = 0
-predictions = ["Initializing.."]
-EVERY_N_FRAME = 5
-VIDEO_STREAM_LINK = "http://192.168.0.100:4747/video"
+    videoCaptureObject = cv2.VideoCapture(VIDEO_STREAM_LINK)
 
-videoCaptureObject = cv2.VideoCapture(VIDEO_STREAM_LINK)
-while True:
-    success, frame = videoCaptureObject.read()
-    if not success:
-        print(f"Failed to read frame from video stream {VIDEO_STREAM_LINK}")
-        break
-    frame_number += 1
+    frame_number = 0
+    while True:
+        success, frame = videoCaptureObject.read()
+        if not success:
+            print(f"Failed to read frame from video stream {VIDEO_STREAM_LINK}")
+        frame_number+=1
+        fps = videoCaptureObject.get(cv2.CAP_PROP_FPS)
+        if frame_number % (math.ceil(fps/framesPerSecond))==0:
+            temp = frame.copy()
+            cv2.imshow(f"Capturing Video", temp)
+            hands, annotatedFrame = handDetector.findHands(temp)
+            if hands:
+                oneHand = hands[0]
+                x,y,w,h = oneHand['bbox']
+                croppedImage = frame[y-CROP_OFFSET:y+h+CROP_OFFSET, x-CROP_OFFSET:x+w+CROP_OFFSET]
+                imgWhite = np.ones((IMG_SIZE, IMG_SIZE, 3), np.uint8)  * 255
 
-    if frame_number % EVERY_N_FRAME == 0:
-        image = cv2.resize(frame, (128, 128))
-        image = np.array(image, dtype='float32') / 255.0
-        image = image.reshape((1, 128, 128, 3))  # Reshape to match the model's input shape
-        print(image.shape)
 
-        predictions = loaded_model.predict(image)
-        predicted_class_index = np.argmax(predictions, axis=-1)
-        cv2.putText(frame, f"{tags[predicted_class_index[0]]}, {predictions}", (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 2)
-        cv2.imshow("Predictions", frame)
-    cv2.imshow("Live", frame)
+                aspectRatio = w / h
+                if aspectRatio > 1 :
+                    adjustedWidth = 300 
+                    adjustedHeight = min(300, math.ceil(h*300/w))
+                    croppedImage = cv2.resize(croppedImage,(adjustedWidth, adjustedHeight))
 
-    # Ensure the OpenCV window is properly sized to match the frame
-    cv2.namedWindow("Live", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Live", frame.shape[1], frame.shape[0])
+                    offset = math.ceil((IMG_SIZE-adjustedHeight)/2)
+                    imgWhite[0+offset:adjustedHeight+offset, 0:adjustedWidth] = croppedImage
+                else :
+                    adjustedHeight = 300 
+                    adjustedWidth = min(300,math.ceil(w*300/h))
+                    croppedImage = cv2.resize(croppedImage,(adjustedWidth, adjustedHeight))
+                    offset = math.ceil((IMG_SIZE-adjustedWidth)/2)
+                    imgWhite[0:adjustedHeight, 0+offset:adjustedWidth+offset] = croppedImage
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-# Release the video capture object and close all OpenCV windows
-videoCaptureObject.release()
-cv2.destroyAllWindows()
-
+                imageOfHand = imgWhite
+                image = cv2.resize(frame, (128, 128))
+                image = np.array(image, dtype='float32') / 255.0
+                image = image.reshape((1, 128, 128, 3))
+                predictions = loaded_model.predict(image)
+                print(predictions)
+                predicted_class_index = np.argmax(predictions, axis=-1)
+                cv2.putText(imageOfHand, f"{tags[predicted_class_index[0]]}, {predictions}", (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 2)
+                cv2.imshow(f"Hand Detected", imageOfHand)
+        if cv2.waitKey(1) == ord('q'):
+            break
+collectHandKeypointsDataForClass()

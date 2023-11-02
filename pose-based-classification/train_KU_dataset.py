@@ -66,7 +66,8 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # Train the model
-model.fit(x_train, y_train, epochs=10, batch_size=32)  # Adjust the number of epochs and batch size as needed
+model.fit(x_train, y_train, epochs=15, batch_size=32)  # Adjust the number of epochs and batch size as needed
+model.save("image_based_sign_recognition_on_KU_dataset.h5")  # Save it as an HDF5 file (recommended)
 
 # Evaluate the model on the test data
 test_loss, test_accuracy = model.evaluate(x_test, y_test)

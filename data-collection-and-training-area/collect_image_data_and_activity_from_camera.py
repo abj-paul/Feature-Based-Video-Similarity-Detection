@@ -96,4 +96,4 @@ def collectDataForClass(className, number_of_sample):
             if saved_frame_number > number_of_sample: 
                 break
 
-collectDataForClass("miser", 30)
+collectDataForClass("Camera", 100)

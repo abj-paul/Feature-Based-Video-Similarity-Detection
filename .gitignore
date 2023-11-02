@@ -4,3 +4,4 @@ data/
 *pycache*
 *.h5
 *apiBSLEnv*
+*output_frame*

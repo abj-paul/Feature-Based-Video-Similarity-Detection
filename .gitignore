@@ -5,3 +5,5 @@ data/
 *.h5
 *apiBSLEnv*
 *output_frame*
+*poseBSLEnv*
+*MSLD*

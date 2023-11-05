@@ -81,12 +81,10 @@ def save_keypoints_and_image(image_path, class_name, sample_number):
         np.save(f"data/{class_name}/sample_{sample_number}.npy", keypoints)
         cv2.imwrite(f"data/{class_name}/keypoint_sample_{sample_number}.jpg",cv2.resize(keypointImage, (640, 480)))
 
-'''
 directory_image_paths = get_image_paths_from_KU_dataset("MSLD/")
 for directory_name, folder_images in directory_image_paths:
     for index,image_path in enumerate(folder_images):
         save_keypoints_and_image(image_path, directory_name, index)
         print(f"Processing {image_path}")
 
-'''
 

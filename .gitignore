@@ -2,7 +2,6 @@
 data/
 *.mp4
 *pycache*
-*.h5
 *apiBSLEnv*
 *output_frame*
 *poseBSLEnv*

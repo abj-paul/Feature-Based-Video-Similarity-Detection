@@ -2,16 +2,26 @@ import os
 import cv2
 import numpy as np
 
+def compare_videos(class_a, class_b):
+    return np.array_equal(class_a, class_b)
+
+
+def iterate_videos_and_compare(video_dictionary):
+    video_keys = list(video_dictionary.keys())
+
+    for index1, key1 in enumerate(video_keys):
+        for index2, key2 in enumerate(video_keys):
+            if index1 == index2:
+                video1 = video_dictionary[key1]
+                video2 = video_dictionary[key2]
+                print(key1, key2)
+                result = compare_videos(video1, video2)
+                print("Comparison betweenc" + key1 + " and " + key2 + " " + str(result))
+        
+
+
 def read_videos_and_extract_frames(data_directory):
-    """
-    Read videos from the specified directory, extract frames, and store them in a NumPy array.
 
-    Parameters:
-    - data_directory (str): The path to the directory containing video data.
-
-    Returns:
-    - frames_dict (dict): A dictionary where keys are category names and values are lists of frames.
-    """
     frames_dict = {}
 
     # List all items in the data directory
@@ -33,25 +43,17 @@ def read_videos_and_extract_frames(data_directory):
             for video_filename in videos:
                 video_path = os.path.join(category_path, video_filename)
 
-                # Open the video file
                 cap = cv2.VideoCapture(video_path)
 
-                # Read frames until there are no more frames
                 success, frame = cap.read()
                 while success:
-                    # Convert the frame to grayscale if needed
-                    # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-                    # Append the frame to the list
                     category_frames.append(frame)
 
-                    # Read the next frame
                     success, frame = cap.read()
 
-                # Release the video capture object
                 cap.release()
 
-            # Convert the list of frames to a NumPy array and store in the dictionary
             frames_dict[category] = np.array(category_frames)
 
     return frames_dict
@@ -59,4 +61,8 @@ def read_videos_and_extract_frames(data_directory):
 # Example usage:
 data_directory = "../data"
 frames_data = read_videos_and_extract_frames(data_directory)
+print(frames_data)
+##same not same dataset banay rakho
+iterate_videos_and_compare(frames_data)
 
+##video same not same

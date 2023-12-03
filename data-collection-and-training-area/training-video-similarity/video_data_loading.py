@@ -5,6 +5,22 @@ import numpy as np
 def compare_videos(class_a, class_b):
     return np.array_equal(class_a, class_b)
 
+def load_videos_to_training(video_dictionary):
+    # matrix=[[]]
+    # keys=[]
+    # for key,values in video_dictionary.items():
+    #     row=[]
+    #     keys.append(key)
+    #     for value in values:
+    #         row.append(value)
+    #     matrix.append(row)
+    arrays = [video_dictionary[key] for key in video_dictionary.keys()]
+    keys = list(video_dictionary.keys())
+    print("Keys:", keys)
+    print("Matrix:", arrays)
+    return arrays, keys
+
+
 
 def iterate_videos_and_compare(video_dictionary):
     video_keys = list(video_dictionary.keys())
@@ -61,8 +77,9 @@ def read_videos_and_extract_frames(data_directory):
 # Example usage:
 data_directory = "../data"
 frames_data = read_videos_and_extract_frames(data_directory)
-print(frames_data)
+#print(frames_data)
 ##same not same dataset banay rakho
-iterate_videos_and_compare(frames_data)
+load_videos_to_training(frames_data)
+#iterate_videos_and_compare(frames_data)
 
 ##video same not same

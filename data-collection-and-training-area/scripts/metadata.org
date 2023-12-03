@@ -1,0 +1,24 @@
+| Chittagong | Hard | 33 | onek area |
+| Faridpur | Easy | 32 | Onek |
+| Dhaka | Medium | 31 | Olpo |
+| Bivag | Easy | 30 | |
+| Jela | Medium | 30 | |
+| Sobuj | Easy | 28 | olpo |
+| Rong | Medium | 28 | | 
+| Joma | Medium | 69 | |
+| Taka | Medium | 69 | olpo |
+
+Different understanding of complexity begins here. Complexity based on activity recognition.
+| Tahabil | Easy | 69 | onek |
+| Grephtar | Easy | 72 | medium |
+| Jel | Easy | 72 | medium |
+| Phasi | Easy | 72 | Onek |
+Inspiration: You can't just recognize some things using activity alone, you need to consider organ orientation as well. For example, 
+| Zuddho | Easy | 72 | Medium |
+| Shotru | Extremely Hard** | 73 | Medium |
+| Korat | Extremely Hard** | 73 | Medium |
+| Kuthar| Easy | 74 | Medium |
+| Camera| Medium | 74 | Olpo |
+| Gari | Hard | 75 | Medium |
+| Guitar | Hard | 75 | Medium |
+

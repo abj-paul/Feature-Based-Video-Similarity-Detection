@@ -10,4 +10,4 @@ print(cosine_similairty(X[0][0], X[2][1]))
 
 
 print("Testing Video Similarity between Same Video: ")
-print(calculate_video_similarity("demo.mkv","demo.mkv"))
+print(calculate_video_similarity("data/Faridpur_2.mp4","data/Faridpur_9.mp4"))

@@ -4,7 +4,7 @@ import numpy as np
 import os
 import math 
 
-VIDEO_STREAM_LINK = "http://192.168.0.104:4747/video"
+VIDEO_STREAM_LINK = "http://192.168.0.100:4747/video"
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles

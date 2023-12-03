@@ -1,3 +1,7 @@
+* Current Focus
+- [ ] Run the project
+- [ ] Train a model to get features.
+
 * Miscellaneous Instructions
 Note that, we have put data in gitignore so before you push, always ensure to zip data folder using
 Additionally, generate requirements.txt file.
@@ -6,15 +10,9 @@ pip freeze > requirements.txt
 zip bsl_data_collected.zip data/ -r
 #+end_src
 
+
 * Existing Datasets
 Alphabet dataset: https://www.kaggle.com/datasets/muntakimrafi/bengali-sign-language-dataset
 uwu: https://arxiv.org/abs/2302.11559
 How to train using teachable machine: https://www.youtube.com/watch?v=wa2ARoUUdU8
-
-* TODO
-- [X] Write a function that takes two video and finds their similarity
-- [ ] Write code for sign recognition
-- [ ] Write endpoint 
-- [ ] Train model
-- [ ] Update the function that takes two video and finds their similarity
 

@@ -3,7 +3,7 @@ from keras.models import load_model
 import joblib
 import cv2
 import random
-
+import os
 # Load the trained model
 model = load_model('video_similarity_model.h5')
 
@@ -66,8 +66,45 @@ def test_for_two_video(video1_name, video2_name, num_frames_per_video=10):
 
     # Assuming 'model' is already loaded and defined
     predictions = model.predict(video_pair.reshape(1, -1))  # Reshape to add batch dimension
-    print(f"predictions: {predictions}")
+
+    # Convert predictions to binary values (0 or 1) based on a threshold (e.g., 0.5)
+    threshold = 0.5
+    binary_predictions = (predictions > threshold).astype(int)
+
+    # Determine if the model's prediction is correct
+    prediction_correct = binary_predictions[0] == pSame
+
+    # Print the results
+    print(f"Video Pair: {video1_name} and {video2_name}")
+    print(f"True Labels: Same={pSame}, Different={not pSame}")
+    print(f"Model Predictions: Same={binary_predictions[0]}, Different={not binary_predictions[0]}")
+    print(f"Prediction Correct: {prediction_correct}\n")
+
+def test_for_all_videos(data_directory):
+    categories = os.listdir(data_directory)
+
+    # Iterate over categories
+    all_videos = []
+    for category in categories:
+        category_path = os.path.join(data_directory, category)
+
+        # Check if the item is a directory
+        if os.path.isdir(category_path):
+            # List all items in the category directory (video files)
+            for video in os.listdir(category_path):
+                if video.endswith('.mp4'):
+                    video_path = os.path.join(category_path, video)
+                    all_videos.append(video_path)
+    
+    max_test_count = 100
+    for index, video_file_path in enumerate(all_videos):
+        if index>=max_test_count: break
+        test_for_two_video(all_videos[index], all_videos[index+20])
 
 
-# Example usage
-test_for_two_video("../data/Akashi/Akashi_2.mp4", "../data/Akashi/Akashi_5.mp4")
+# # Example usage
+# test_for_two_video("../data/Akashi/Akashi_2.mp4", "../data/Akashi/Akashi_5.mp4")
+# test_for_two_video("../data/Akashi/Akashi_2.mp4", "../data/Bivag/Bivag_3.mp4")
+
+test_for_all_videos("../data/")
+

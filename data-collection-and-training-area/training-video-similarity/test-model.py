@@ -1,20 +1,25 @@
+import numpy as np
 from keras.models import load_model
+import joblib
 
-# Load the saved model
-loaded_model = load_model('video_similarity_model.h5')
+# Load the trained model
+model = load_model('video_similarity_model.h5')
 
-# Assuming you have a function to preprocess new videos and get them in the right shape
-def preprocess_new_videos(new_videos):
-    # Your preprocessing logic here
-    # Return the preprocessed data
-    return preprocessed_data
+# Load test data
+X_test = joblib.load("X.joblib")  # Replace 'X_test.joblib' with the filename for your test data
+Y_test = joblib.load("Y.joblib")  # Replace 'Y_test.joblib' with the filename for your test labels
 
-# Load and preprocess new videos
-new_videos = joblib.load("X.joblib")  # Replace with your actual file or loading mechanism
-preprocessed_data = preprocess_new_videos(new_videos[0])
+# Make predictions on the test data
+predictions = model.predict(X_test)
 
-# Make predictions
-predictions = loaded_model.predict(preprocessed_data)
+# Convert predictions to binary values (0 or 1) based on a threshold (e.g., 0.5)
+threshold = 0.5
+binary_predictions = (predictions > threshold).astype(int)
 
-# You can use the predictions for further analysis or decision-making
-print(predictions)
+# Evaluate the model on the test data
+accuracy = np.mean(binary_predictions == Y_test)
+print(f"Accuracy on test data: {accuracy}")
+
+# You can also use model.evaluate for more metrics
+# evaluation = model.evaluate(X_test, Y_test)
+# print(f"Test Loss: {evaluation[0]}, Test Accuracy: {evaluation[1]}")

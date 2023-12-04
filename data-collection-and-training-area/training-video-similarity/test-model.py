@@ -57,7 +57,7 @@ def preprocess_video(video_name, num_frames_per_video):
 
     return np.concatenate(category_frames), video_name
 
-def test_for_two_video(video1_name, video2_name, num_frames_per_video=10):
+def test_for_two_video(video1_name, video2_name, num_frames_per_video=15):
     video1, label1 = preprocess_video(video1_name, num_frames_per_video)
     video2, label2 = preprocess_video(video2_name, num_frames_per_video)
 

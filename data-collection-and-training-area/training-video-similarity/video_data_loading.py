@@ -9,7 +9,6 @@ def compare_videos(class_a, class_b):
 
 # Shape: 50 X 480 X 640 X 3 = 50 X 921600
 import numpy as np
-
 def construct_dataset_for_video_similarity(videos, labels, max_data_per_class=3):
     print(f"Constructing dataset for video similarity")
     video_pairs = []
@@ -19,20 +18,23 @@ def construct_dataset_for_video_similarity(videos, labels, max_data_per_class=3)
 
     for i, label1 in enumerate(labels):
         for j, label2 in enumerate(labels):
-            if (label1, label2) in visited:
-                continue
-            if label1 == label2:
+            if str(label1) == str(label2):
                 video_pairs.append(np.concatenate((videos[i].reshape(-1), videos[j].reshape(-1))))
                 pSame.append(True)
             else:
                 video_pairs.append(np.concatenate((videos[i].reshape(-1), videos[j].reshape(-1))))
-                pSame.append(False)
+                pSame.append(False)  # Set to False explicitly
+
             visited.append((label1, label2))
             if j >= max_data_per_class:
                 break
-            #print(f"Log: Currently saving {i},{j} pair..")
+
+    true_count = sum(1 for value in pSame if value)
+    false_count = sum(1 for value in pSame if not value)
+    print(f"Data Balance: Y(True)={true_count} Y(False)={false_count}")
 
     return np.array(video_pairs), np.array(pSame).reshape(-1, 1)
+
 
     
 
@@ -49,7 +51,7 @@ def iterate_videos_and_compare(video_dictionary):
                 print("Comparison betweenc" + key1 + " and " + key2 + " " + str(result))
 
 
-def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_videos_per_class=5):
+def read_videos_and_extract_frames(data_directory, num_frames_per_video=15, num_videos_per_class=10):
     print("Reading videos")
     videos_loaded = []
     labels_for_each_video = []
@@ -80,7 +82,8 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
                 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
                 # Randomly choose num_frames_per_video frames
-                selected_frames = sorted(random.sample(range(total_frames), num_frames_per_video))
+                #selected_frames = sorted(random.sample(range(total_frames), num_frames_per_video))
+                selected_frames = [num for num in range(num_frames_per_video)]
                 video_frames = []
                 for frame_num in selected_frames:
                     # Set the frame position
@@ -106,9 +109,9 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
             
 
 # Example usage:
-# data_directory = "../data"
-# videos, labels = read_videos_and_extract_frames(data_directory)
-# X,Y = construct_dataset_for_video_similarity(videos, labels)
-# print(f"X={X} Y={Y.shape}")
-# joblib.dump(X,"X.joblib")
-# joblib.dump(Y,"Y.joblib")
+data_directory = "../data"
+videos, labels = read_videos_and_extract_frames(data_directory)
+X,Y = construct_dataset_for_video_similarity(videos, labels)
+print(f"X={X.shape} Y={Y.shape}")
+joblib.dump(X,"X.joblib")
+joblib.dump(Y,"Y.joblib")

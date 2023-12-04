@@ -70,7 +70,6 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
             selected_videos = random.sample(videos, min(num_videos_per_class, len(videos)))
 
             # Initialize an empty list to store frames for the current category
-            category_frames = []
 
             # Iterate over selected videos in the current category
             for video_filename in selected_videos:
@@ -82,7 +81,7 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
 
                 # Randomly choose num_frames_per_video frames
                 selected_frames = sorted(random.sample(range(total_frames), num_frames_per_video))
-
+                video_frames = []
                 for frame_num in selected_frames:
                     # Set the frame position
                     cap.set(cv2.CAP_PROP_POS_FRAMES, frame_num)
@@ -95,14 +94,16 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
                         # Resize the grayscale image
                         resized_frame = cv2.resize(gray_frame, (128, 128))
 
-                        category_frames.append(resized_frame)
+                        video_frames.append(resized_frame)
+                videos_loaded.append(np.array(video_frames))
+                labels_for_each_video.append(category)
 
                 cap.release()
             
                 #print(f"Video Size: {len(category_frames)}, Frame Size: {frame.shape}")
-            videos_loaded.append(np.array(category_frames))
-            labels_for_each_video.append(category)
     return videos_loaded, labels_for_each_video
+
+            
 
 # Example usage:
 # data_directory = "../data"

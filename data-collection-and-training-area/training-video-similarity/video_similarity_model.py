@@ -38,8 +38,8 @@ model.summary()
 history = model.fit(
     X,  # input data
     Y,  # labels
-    epochs=10,  # adjust as needed
-    batch_size=10,  # adjust as needed (should be the number of videos)
+    epochs=3,  # adjust as needed
+    batch_size=20,  # adjust as needed (should be the number of videos)
     validation_split=0.2,  # adjust as needed, this is for validation split
     verbose=1
 )

@@ -10,28 +10,20 @@ def compare_videos(class_a, class_b):
 # Shape: 50 X 480 X 640 X 3 = 50 X 921600
 import numpy as np
 def construct_dataset_for_video_similarity(videos, labels, max_data_per_class=3):
-    print(f"Constructing dataset for video similarity")
     video_pairs = []
     pSame = []
+    OFFSET = 20
+    for index in range(len(labels)-OFFSET):
+            video_pairs.append(np.concatenate((videos[index].reshape(-1), videos[index+OFFSET].reshape(-1))))
+            pSame.append(labels[index]==labels[index+OFFSET])
+    OFFSET = 1
+    for index in range(len(labels)-OFFSET):
+            video_pairs.append(np.concatenate((videos[index].reshape(-1), videos[index+OFFSET].reshape(-1))))
+            pSame.append(labels[index]==labels[index+OFFSET])
 
-    visited = []
-
-    for i, label1 in enumerate(labels):
-        for j, label2 in enumerate(labels):
-            if str(label1) == str(label2):
-                video_pairs.append(np.concatenate((videos[i].reshape(-1), videos[j].reshape(-1))))
-                pSame.append(True)
-            else:
-                video_pairs.append(np.concatenate((videos[i].reshape(-1), videos[j].reshape(-1))))
-                pSame.append(False)  # Set to False explicitly
-
-            visited.append((label1, label2))
-            if j >= max_data_per_class:
-                break
-
-    true_count = sum(1 for value in pSame if value)
-    false_count = sum(1 for value in pSame if not value)
-    print(f"Data Balance: Y(True)={true_count} Y(False)={false_count}")
+    true_count = sum([1 for value in pSame if value])
+    false_count = sum([1 for value in pSame if not value])
+    print(f"Data balancing----\nN(True)={true_count}\nN(False)={false_count}")
 
     return np.array(video_pairs), np.array(pSame).reshape(-1, 1)
 

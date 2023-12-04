@@ -99,7 +99,7 @@ def test_for_all_videos(data_directory):
     max_test_count = 100
     for index, video_file_path in enumerate(all_videos):
         if index>=max_test_count: break
-        test_for_two_video(all_videos[index], all_videos[index+20])
+        test_for_two_video(all_videos[index], all_videos[index])
 
 
 # # Example usage

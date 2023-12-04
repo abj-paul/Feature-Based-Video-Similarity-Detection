@@ -29,7 +29,7 @@ def construct_dataset_for_video_similarity(videos, labels, max_data_per_class=3)
             visited.append((label1, label2))
             if j >= max_data_per_class:
                 break
-            print(f"Log: Currently saving {i},{j} pair..")
+            #print(f"Log: Currently saving {i},{j} pair..")
 
     return np.array(video_pairs), np.array(pSame).reshape(-1, 1)
 
@@ -90,7 +90,11 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
                     success, frame = cap.read()
 
                     if success:
-                        category_frames.append(frame)
+                        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                        # Resize the grayscale image
+                        resized_frame = cv2.resize(gray_frame, (128, 128))
+
+                        category_frames.append(resized_frame)
 
                 cap.release()
             
@@ -100,7 +104,7 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
     return videos_loaded, labels_for_each_video
 
 # Example usage:
-data_directory = "../data"
-videos, labels = read_videos_and_extract_frames(data_directory)
-X,Y = construct_dataset_for_video_similarity(videos, labels)
-print(f"X={X.shape} Y={Y.shape}")
+# data_directory = "../data"
+# videos, labels = read_videos_and_extract_frames(data_directory)
+# X,Y = construct_dataset_for_video_similarity(videos, labels)
+# print(f"X={X} Y={Y.shape}")

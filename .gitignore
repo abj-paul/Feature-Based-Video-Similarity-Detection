@@ -7,3 +7,5 @@ data/
 *poseBSLEnv*
 *MSLD*
 bsl_data_collected_400_videos.zip
+*.joblib
+data-collection-and-training-area/training-video-similarity/video_similarity_model.h5

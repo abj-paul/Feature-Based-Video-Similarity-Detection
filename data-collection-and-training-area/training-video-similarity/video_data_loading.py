@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 import random
+import joblib
 
 def compare_videos(class_a, class_b):
     return np.array_equal(class_a, class_b)
@@ -108,3 +109,5 @@ def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_
 # videos, labels = read_videos_and_extract_frames(data_directory)
 # X,Y = construct_dataset_for_video_similarity(videos, labels)
 # print(f"X={X} Y={Y.shape}")
+# joblib.dump(X,"X.joblib")
+# joblib.dump(Y,"Y.joblib")

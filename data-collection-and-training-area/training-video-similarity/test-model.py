@@ -35,7 +35,7 @@ def preprocess_video(video_name, num_frames_per_video):
         raise ValueError("num_frames_per_video is larger than the total number of frames in the video")
 
     # Randomly choose num_frames_per_video frames
-    selected_frames = sorted(random.sample(range(total_frames), num_frames_per_video))
+    selected_frames = [num for num in range(num_frames_per_video)]
 
     for frame_num in selected_frames:
         # Set the frame position
@@ -99,7 +99,7 @@ def test_for_all_videos(data_directory):
     max_test_count = 100
     for index, video_file_path in enumerate(all_videos):
         if index>=max_test_count: break
-        test_for_two_video(all_videos[index], all_videos[index])
+        test_for_two_video(all_videos[index], all_videos[index+1])
 
 
 # # Example usage

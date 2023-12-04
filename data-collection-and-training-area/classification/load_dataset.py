@@ -1,6 +1,7 @@
 import os
 import cv2
 import numpy as np
+import joblib 
 
 def compare_videos(class_a, class_b):
     return np.array_equal(class_a, class_b)
@@ -64,8 +65,10 @@ def read_videos_and_extract_frames(data_directory):
 
                 success, frame = cap.read()
                 while success:
-
-                    category_frames.append(frame)
+                    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    # Resize the grayscale image
+                    resized_frame = cv2.resize(gray_frame, (128, 128))
+                    category_frames.append(resized_frame)
 
                     success, frame = cap.read()
 
@@ -80,3 +83,7 @@ data_directory = "../data"
 frames_data = read_videos_and_extract_frames(data_directory)
 X,Y = load_videos_to_training(frames_data)
 print(f"X={X.shape}, Y={Y.shape}")
+
+
+joblib.dump(X, "X.joblib")
+joblib.dump(Y, "Y.joblib")

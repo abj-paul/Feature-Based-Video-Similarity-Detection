@@ -1,26 +1,39 @@
 import os
 import cv2
 import numpy as np
+import random
 
 def compare_videos(class_a, class_b):
     return np.array_equal(class_a, class_b)
 
-def load_videos_to_training(video_dictionary):
-    # matrix=[[]]
-    # keys=[]
-    # for key,values in video_dictionary.items():
-    #     row=[]
-    #     keys.append(key)
-    #     for value in values:
-    #         row.append(value)
-    #     matrix.append(row)
-    arrays = [video_dictionary[key] for key in video_dictionary.keys()]
-    keys = list(video_dictionary.keys())
-    print("Keys:", keys)
-    print("Matrix:", arrays)
-    return arrays, keys
+# Shape: 50 X 480 X 640 X 3 = 50 X 921600
+import numpy as np
 
+def construct_dataset_for_video_similarity(videos, labels, max_data_per_class=3):
+    print(f"Constructing dataset for video similarity")
+    video_pairs = []
+    pSame = []
 
+    visited = []
+
+    for i, label1 in enumerate(labels):
+        for j, label2 in enumerate(labels):
+            if (label1, label2) in visited:
+                continue
+            if label1 == label2:
+                video_pairs.append(np.concatenate((videos[i].reshape(-1), videos[j].reshape(-1))))
+                pSame.append(True)
+            else:
+                video_pairs.append(np.concatenate((videos[i].reshape(-1), videos[j].reshape(-1))))
+                pSame.append(False)
+            visited.append((label1, label2))
+            if j >= max_data_per_class:
+                break
+            print(f"Log: Currently saving {i},{j} pair..")
+
+    return np.array(video_pairs), np.array(pSame).reshape(-1, 1)
+
+    
 
 def iterate_videos_and_compare(video_dictionary):
     video_keys = list(video_dictionary.keys())
@@ -33,12 +46,12 @@ def iterate_videos_and_compare(video_dictionary):
                 print(key1, key2)
                 result = compare_videos(video1, video2)
                 print("Comparison betweenc" + key1 + " and " + key2 + " " + str(result))
-        
 
 
-def read_videos_and_extract_frames(data_directory):
-
-    frames_dict = {}
+def read_videos_and_extract_frames(data_directory, num_frames_per_video=10, num_videos_per_class=5):
+    print("Reading videos")
+    videos_loaded = []
+    labels_for_each_video = []
 
     # List all items in the data directory
     categories = os.listdir(data_directory)
@@ -52,34 +65,42 @@ def read_videos_and_extract_frames(data_directory):
             # List all items in the category directory (video files)
             videos = [video for video in os.listdir(category_path) if video.endswith('.mp4')]
 
+            # Randomly choose at most 5 videos per category
+            selected_videos = random.sample(videos, min(num_videos_per_class, len(videos)))
+
             # Initialize an empty list to store frames for the current category
             category_frames = []
 
-            # Iterate over videos in the current category
-            for video_filename in videos:
+            # Iterate over selected videos in the current category
+            for video_filename in selected_videos:
                 video_path = os.path.join(category_path, video_filename)
 
                 cap = cv2.VideoCapture(video_path)
 
-                success, frame = cap.read()
-                while success:
+                total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-                    category_frames.append(frame)
+                # Randomly choose num_frames_per_video frames
+                selected_frames = sorted(random.sample(range(total_frames), num_frames_per_video))
 
+                for frame_num in selected_frames:
+                    # Set the frame position
+                    cap.set(cv2.CAP_PROP_POS_FRAMES, frame_num)
+
+                    # Read the selected frame
                     success, frame = cap.read()
 
+                    if success:
+                        category_frames.append(frame)
+
                 cap.release()
-
-            frames_dict[category] = np.array(category_frames)
-
-    return frames_dict
+            
+                #print(f"Video Size: {len(category_frames)}, Frame Size: {frame.shape}")
+            videos_loaded.append(np.array(category_frames))
+            labels_for_each_video.append(category)
+    return videos_loaded, labels_for_each_video
 
 # Example usage:
 data_directory = "../data"
-frames_data = read_videos_and_extract_frames(data_directory)
-#print(frames_data)
-##same not same dataset banay rakho
-load_videos_to_training(frames_data)
-#iterate_videos_and_compare(frames_data)
-
-##video same not same
+videos, labels = read_videos_and_extract_frames(data_directory)
+X,Y = construct_dataset_for_video_similarity(videos, labels)
+print(f"X={X.shape} Y={Y.shape}")

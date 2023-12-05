@@ -36,7 +36,7 @@ def load_all_keypoint_video_from_BdSL_420_dataset(dataset_path, NUM_OF_CLASS_TO_
     print(class_list)
     return np.array(X), Y
 
-X,Y = load_all_keypoint_video_from_BdSL_420_dataset("../data", NUM_OF_CLASS_TO_LOAD=10)
+X,Y = load_all_keypoint_video_from_BdSL_420_dataset("../data", NUM_OF_CLASS_TO_LOAD=21)
 joblib.dump(X, "X.joblib")
 joblib.dump(Y, "Y.joblib")
 print(f"X={X.shape}, Y={len(Y)}")

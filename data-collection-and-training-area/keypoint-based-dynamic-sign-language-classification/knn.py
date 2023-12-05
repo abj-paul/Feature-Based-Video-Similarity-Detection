@@ -37,3 +37,4 @@ print(f"Accuracy after standardization: {accuracy}")
 
 # Save the trained k-NN model
 joblib.dump(knn_classifier, "knn_model.joblib")
+joblib.dump(label_encoder, "label_encoder.joblib")

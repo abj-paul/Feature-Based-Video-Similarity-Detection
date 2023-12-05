@@ -14,19 +14,25 @@ def preprocess_frame(frame):
     gray_frame = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2GRAY)
     
     # Normalize pixel values to be between 0 and 1
-    #normalized_frame = gray_frame / 255.0
+    #preprocessed_frame = gray_frame / 255.0
     
     # Add an additional dimension for the channel (assuming 1 channel for grayscale)
-    preprocessed_frame = np.expand_dims(gray_frame, axis=-1)
     
-    return preprocessed_frame
+    return gray_frame
 
 # Open the camera
 cap = cv2.VideoCapture("http://192.168.0.101:4747/video")  # Use 0 for the default camera
 
+# Set the frame skip interval
+frame_skip_interval = 5  # Adjust as needed
+
 while True:
     # Capture a frame
     ret, frame = cap.read()
+    
+    # Skip frames at regular intervals
+    for _ in range(frame_skip_interval):
+        ret, _ = cap.read()
     
     # Preprocess the frame
     preprocessed_frame = preprocess_frame(frame)

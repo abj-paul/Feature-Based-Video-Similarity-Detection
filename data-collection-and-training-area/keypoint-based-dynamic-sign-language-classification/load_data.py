@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import joblib
 
 def __load_single_sample(sample_path, NUM_OF_FRAME_PER_SAMEPLE=17):
     keypoints_collection = []
@@ -20,13 +21,23 @@ def __list_directories(folder_path):
     return directories
 
 def load_all_keypoint_video_from_BdSL_420_dataset(dataset_path):
-    class_sample_collection = []
+    X = None
     class_list = __list_directories(dataset_path)
-    for class_name in class_list:
-        class_sample_collection.append(__load_all_samples_for_a_class(f"{dataset_path}/{class_name}"))
-    return np.array(class_sample_collection)
+    Y = []
+    for index, class_name in enumerate(class_list):
+        new_sample = __load_all_samples_for_a_class(f"{dataset_path}/{class_name}")
+        Y = Y + [class_name for _ in new_sample]
+        if index==0:
+            X = new_sample
+        else:
+            X = np.concatenate((X, new_sample), axis=0)
+    return np.array(X), Y
 
-print(__load_single_sample("../data/Akashi/sample0").shape) # 20 X 1662
-print(__load_all_samples_for_a_class("../data/Akashi/").shape) # 19 X 20 X 1662
-print(load_all_keypoint_video_from_BdSL_420_dataset("../data").shape) # (21, 19, 16, 1662)
+X,Y = load_all_keypoint_video_from_BdSL_420_dataset("../data")
+joblib.dump(X, "X.joblib")
+joblib.dump(Y, "Y.joblib")
+print(f"X={X.shape}, Y={len(Y)}")
+#print(__load_single_sample("../data/Akashi/sample0").shape) # 20 X 1662
+#print(__load_all_samples_for_a_class("../data/Akashi/").shape) # 19 X 20 X 1662
+#print(load_all_keypoint_video_from_BdSL_420_dataset("../data")[0].shape) # (21, 19, 16, 1662)
 

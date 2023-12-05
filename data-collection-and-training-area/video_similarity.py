@@ -4,7 +4,7 @@ from tensorflow.keras.utils import to_categorical
 from numpy import dot
 from numpy.linalg import norm
 
-from collect_data_from_video import collectActivityDataFromVideo
+from data_collection.collect_data_from_video import collectActivityDataFromVideo
 
 
 SAMPLE_NUM = 1

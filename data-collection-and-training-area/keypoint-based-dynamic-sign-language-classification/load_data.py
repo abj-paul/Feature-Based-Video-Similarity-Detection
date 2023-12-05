@@ -20,20 +20,23 @@ def __list_directories(folder_path):
     directories = [entry for entry in entries if os.path.isdir(os.path.join(folder_path, entry))]
     return directories
 
-def load_all_keypoint_video_from_BdSL_420_dataset(dataset_path):
+def load_all_keypoint_video_from_BdSL_420_dataset(dataset_path, NUM_OF_CLASS_TO_LOAD):
     X = None
     class_list = __list_directories(dataset_path)
     Y = []
     for index, class_name in enumerate(class_list):
         new_sample = __load_all_samples_for_a_class(f"{dataset_path}/{class_name}")
-        Y = Y + [class_name for _ in new_sample]
         if index==0:
             X = new_sample
+        elif index==NUM_OF_CLASS_TO_LOAD:
+            break
         else:
             X = np.concatenate((X, new_sample), axis=0)
+        Y = Y + [class_name for _ in new_sample]
+
     return np.array(X), Y
 
-X,Y = load_all_keypoint_video_from_BdSL_420_dataset("../data")
+X,Y = load_all_keypoint_video_from_BdSL_420_dataset("../data", NUM_OF_CLASS_TO_LOAD=3)
 joblib.dump(X, "X.joblib")
 joblib.dump(Y, "Y.joblib")
 print(f"X={X.shape}, Y={len(Y)}")

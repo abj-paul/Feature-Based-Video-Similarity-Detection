@@ -61,7 +61,7 @@ while True:
         print(f"{predicted_label}")
         keypoints_sequence = []
     else:
-        cv2.putText(keypoint_frame, f"Accumulated Frames: {len(keypoints_sequence)}/20", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(keypoint_frame, f"Accumulated Frames: {len(keypoints_sequence)}/16", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
     cv2.imshow('Video Classification', keypoint_frame)
 

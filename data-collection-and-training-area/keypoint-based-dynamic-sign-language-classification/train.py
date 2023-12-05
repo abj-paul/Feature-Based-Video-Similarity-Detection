@@ -11,7 +11,7 @@ import joblib
 X = joblib.load("X.joblib")
 Y = joblib.load("Y.joblib")
 num_of_videos, num_frames_per_sample, num_keypoints = X.shape
-num_classes = 21
+NUM_CLASSES = 3
 
 # Reshape the data to 4D array for CNN input
 X_reshaped = X.reshape(-1, num_frames_per_sample, num_keypoints, 1)
@@ -29,7 +29,7 @@ model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(num_fra
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
-model.add(Dense(num_classes, activation='softmax'))
+model.add(Dense(NUM_CLASSES, activation='softmax'))
 
 # Compile the model
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])

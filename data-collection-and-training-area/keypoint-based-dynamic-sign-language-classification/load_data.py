@@ -28,5 +28,5 @@ def load_all_keypoint_video_from_BdSL_420_dataset(dataset_path):
 
 print(__load_single_sample("../data/Akashi/sample0").shape) # 20 X 1662
 print(__load_all_samples_for_a_class("../data/Akashi/").shape) # 19 X 20 X 1662
-print(load_all_keypoint_video_from_BdSL_420_dataset("../data").shape)
+print(load_all_keypoint_video_from_BdSL_420_dataset("../data").shape) # (21, 19, 16, 1662)
 

@@ -21,7 +21,7 @@ def preprocess_frame(frame):
     return gray_frame
 
 # Open the camera
-cap = cv2.VideoCapture("http://192.168.0.101:4747/video")  # Use 0 for the default camera
+cap = cv2.VideoCapture(0)  # Use 0 for the default camera
 
 # Set the frame skip interval
 frame_skip_interval = 5  # Adjust as needed

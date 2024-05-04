@@ -23,6 +23,9 @@ After traning, we save the model as h5 files e.g. ~image_based_sign_recognition_
 *** Experiment Result
 This experiment shows the bias of literature to only consider one hand for BdSL recognition, as evident in KU-BdSL dataset. They performed moderately on live data. KU-BdSL dataset size is small and we did not finetune any pretrained model so our trained model considered background as feature as well. To alleviate this issue, we only consider keypoint data in later experiments.
 
+** Experiment - Intermediate Phase
+With previous experience, we now try a bunch of different approachs. We discuss the approaches here one by one.
+
 
 
 

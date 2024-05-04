@@ -1,6 +1,30 @@
-* Current Focus
-- [ ] Run the project
-- [ ] Train a model to get features.
+* About
+
+* Project File Structure
+** Experiement - Pose Based Classification
+We used KU-BdSL dataset in this segment. It contains signs for all bangla alphabets made by multiple students The dataset only contained image of one hand. So only considering keypoints would result in too few data points. So instead, we drew the keypoints on each image and then, used those 'annotated' images of hand for classification. The motivation was that, the model will prioritize those obvious keypoints along with other features for classification. We will now explain our sign recognition model training process step by step.
+1. collect_pose_data.py: First, we collect keypoints/pose from each image. In this e The ~get_image_paths_from_KU_dataset()~ function first loads the images and ~get_keypoints()~ function loads the keypoints for each image using mediapipe library and draws them in the image. Finally, ~save_keypoints_and_image()~ function saves the keypoints for each image as 1D array.
+2. train_KU_dataset.py: We first load the 'annotated' images using ~load_KU_dataset()~ function. Then we train them using a CNN based model of the following architecture. Note that, it is the best we could construct based on our experiments. We however did not consider models that were proposed in litearture, like gestureNet. 
+#+begin_src python
+model = keras.Sequential([
+    keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(128, 128, 3)),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    keras.layers.Flatten(),
+    keras.layers.Dense(64, activation='relu'),
+    keras.layers.Dense(num_classes, activation='softmax')
+])
+#+end_src
+After traning, we save the model as h5 files e.g. ~image_based_sign_recognition_on_KU_dataset.h5~.
+3. ~test_on_live_data.py~: We then load the model and test it in live data. Note that, KU dataset had the following format: [Only image of one hand, they cropped everything else. Additionally, we drew keypoints on those images]. So when doing live testing, we also first identify hand using ~HandDetector~ library and then take only one hand using ~handDetector.findHands()~ and then crop it. Cropping is a bit tricky because we have to also keep aspects consistent. Those are technical details. Also, HandDetector library automatically annotates the keypoints. So we just simply take the keypoint image, resize it to 128*128 dimension and send it to model to get prediction.
+
+*** Experiment Result
+This experiment shows the bias of literature to only consider one hand for BdSL recognition, as evident in KU-BdSL dataset. They performed moderately on live data. KU-BdSL dataset size is small and we did not finetune any pretrained model so our trained model considered background as feature as well. To alleviate this issue, we only consider keypoint data in later experiments.
+
+
+
 
 * Miscellaneous Instructions
 Note that, we have put data in gitignore so before you push, always ensure to zip data folder using
